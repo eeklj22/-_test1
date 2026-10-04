@@ -169,7 +169,7 @@
 
   function renderLock() {
     var on = Store.isAdmin();
-    adminBtn.textContent = on ? "🔓" : "🔒";
+    adminBtn.innerHTML = on ? S.icon.unlock : S.icon.lock;
     adminBtn.classList.toggle("is-on", on);
     adminBtn.setAttribute("aria-label", on ? "관리자 화면 열기" : "관리자 모드");
   }
@@ -346,7 +346,8 @@
     openBefore: "수업 시작 몇 분 전부터", closeAfter: "수업 시작 몇 분 후까지", submission: "과제 제출 규칙",
     accept: "허용 파일 형식", maxMB: "최대 크기(MB)", allowLate: "지각 제출 허용", toolsTitle: "도구 제목",
     prepTitle: "준비물 제목", important: "중요 공지(맨 위 고정)", week: "주차", university: "학교", department: "학과",
-    courseName: "과목명", notices: "공지",
+    courseName: "과목명", notices: "공지", logoMark: "로고 동그라미 글자", tags: "해시태그", art: "파란 그래픽",
+    lines: "큰 글자 줄", year: "연도", seeMore: "‘See More’ 줄", hello: "사진 위 인사말", quote: "사진 아래 한 줄 소개",
   };
   var HINTS = {
     target: "about · curriculum · join · enroll · faq · instructor 중 하나",

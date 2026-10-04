@@ -20,12 +20,20 @@
   function $(id) { return document.getElementById(id); }
   function each(list, fn) { return (list || []).map(fn).join(""); }
   function head(eyebrow, title, lead) {
-    return '<div class="section__head reveal">' +
+    return '<div class="section__head reveal"><div>' +
       '<span class="section__eyebrow">' + esc(eyebrow) + "</span>" +
       '<h2 class="section__title">' + esc(title) + "</h2>" +
       (lead ? '<p class="section__lead">' + esc(lead) + "</p>" : "") +
-      "</div>";
+      '</div><span class="chev" aria-hidden="true">' + ICON.down + "</span></div>";
   }
+  // 선 아이콘 (단색)
+  var ICON = {
+    down: '<svg viewBox="0 0 24 24" width="18" height="18"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    arrowDown: '<svg viewBox="0 0 24 24" width="18" height="18"><path d="M12 5v14M6 13l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    user: '<svg viewBox="0 0 24 24" width="18" height="18"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M4 20c1.5-4 4.5-6 8-6s6.5 2 8 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
+    lock: '<svg viewBox="0 0 24 24" width="17" height="17"><rect x="5" y="11" width="14" height="9" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>',
+    unlock: '<svg viewBox="0 0 24 24" width="17" height="17"><rect x="5" y="11" width="14" height="9" rx="2" fill="currentColor"/><path d="M8 11V8a4 4 0 0 1 7.5-2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
+  };
   // "#id" 는 페이지 안 이동, 그 밖의 주소는 새 창
   function linkAttrs(href) {
     href = href || "#";
@@ -84,6 +92,7 @@
   var meta = document.querySelector('meta[name="description"]');
   if (meta) meta.setAttribute("content", C.site.description);
   $("logoText").textContent = C.site.logoText;
+  $("logoMark").textContent = C.site.logoMark || String(C.site.logoText || "").charAt(0);
   $("nav").innerHTML = each(C.nav, function (n) {
     return '<a href="#' + esc(n.target) + '" data-scroll="' + esc(n.target) + '">' + esc(n.label) + "</a>";
   });
@@ -93,16 +102,31 @@
   var autoSchedule = sessions.length
     ? dot(sessions[0].date) + " – " + dot(sessions[sessions.length - 1].date).slice(5) + " · 매주 " + DAYS[sessions[0].date.getDay()] + "요일 (" + sessions.length + "회)"
     : "";
+  var art = h.art || {};
   $("hero").innerHTML =
-    '<div class="card hero__card reveal">' +
-      (h.badge ? '<span class="hero__badge">🌸 ' + esc(h.badge) + "</span>" : "") +
-      '<h1 class="hero__title">' + esc(h.title) + "</h1>" +
-      '<p class="hero__subtitle">' + esc(h.subtitle) + "</p>" +
-      '<p class="hero__desc">' + esc(h.description) + "</p>" +
-      '<div class="hero__buttons">' + each(h.buttons, function (b) {
-        return '<a class="btn ' + (b.primary ? "btn--primary" : "btn--ghost") + '" ' + linkAttrs(b.href) + ">" + esc(b.label) + "</a>";
-      }) + "</div>" +
+    '<div class="hero__grid">' +
+      '<div class="hero__text reveal">' +
+        (h.badge ? '<span class="hero__badge">' + esc(h.badge) + "</span>" : "") +
+        '<h1 class="hero__title">' + esc(h.title) + "</h1>" +
+        '<p class="hero__subtitle">' + esc(h.subtitle) + "</p>" +
+        '<p class="hero__desc">' + esc(h.description) + "</p>" +
+        '<div class="hero__buttons">' + each(h.buttons, function (b) {
+          return '<a class="btn ' + (b.primary ? "btn--primary" : "btn--ghost") + '" ' + linkAttrs(b.href) + ">" + esc(b.label) + "</a>";
+        }) + "</div>" +
+        '<div class="hero__bottom">' +
+          '<svg class="hero__arrow" viewBox="0 0 100 100" aria-hidden="true"><path d="M14 14L78 78M78 30V78H30" fill="none" stroke="currentColor" stroke-width="15" stroke-linecap="square"/></svg>' +
+          (h.tags && h.tags.length ? '<ul class="hero__tags">' + each(h.tags, function (t) { return "<li>" + esc(t) + "</li>"; }) + "</ul>" : "") +
+        "</div>" +
+      "</div>" +
+      // 오른쪽 파란 타이포그래피 그래픽 (장식용)
+      '<div class="hero__art reveal" aria-hidden="true">' +
+        '<div class="art__lines">' + each(art.lines || [], function (line) {
+          return '<div class="art__line">' + each(String(line).split(""), function (ch) { return "<span>" + esc(ch) + "</span>"; }) + "</div>";
+        }) + "</div>" +
+        '<div class="art__foot"><span class="art__year">' + esc(art.year || "") + '</span><span class="art__bar"></span></div>' +
+      "</div>" +
     "</div>" +
+    (h.seeMore ? '<a class="see-more" ' + linkAttrs(h.seeMore.href) + ">" + esc(h.seeMore.label) + '<span class="chev">' + ICON.arrowDown + "</span></a>" : "") +
     '<div class="quick">' + each(h.info, function (it) {
       return '<div class="card quick__item reveal">' +
         '<span class="quick__icon">' + esc(it.icon) + "</span>" +
@@ -211,7 +235,7 @@
               (isNext ? '<span class="tag tag--next">다음 수업</span>' : "") +
               (s.w.assignment ? '<span class="tag tag--hw">과제</span>' : "") +
             "</span>" +
-            '<span class="week__chev">+</span>' +
+            '<span class="week__chev">' + ICON.down + "</span>" +
           "</button>" +
           '<div class="collapse" id="week-body-' + s.n + '" role="region"><div><div class="week__body">' + weekBody(s) + "</div></div></div>" +
         "</div>";
@@ -255,7 +279,7 @@
     '<div class="faq-list">' + each(fq.items, function (it, i) {
       return '<div class="card faq-item reveal">' +
         '<button class="faq-item__q" aria-expanded="false" aria-controls="faq-a-' + i + '">' +
-          '<span class="faq-item__mark">Q</span><span class="faq-item__q-text">' + esc(it.q) + '</span><span class="week__chev">+</span>' +
+          '<span class="faq-item__mark">Q</span><span class="faq-item__q-text">' + esc(it.q) + '</span><span class="week__chev">' + ICON.down + "</span>" +
         "</button>" +
         '<div class="collapse" id="faq-a-' + i + '" role="region"><div><p class="faq-item__a">' + esc(it.a) + "</p></div></div>" +
       "</div>";
@@ -265,21 +289,37 @@
   var p = C.instructor;
   $("instructor").innerHTML =
     '<div class="footer__inner">' +
-      '<div class="section__head reveal"><span class="section__eyebrow">INSTRUCTOR</span><h2 class="section__title">' + esc(p.title) + "</h2></div>" +
-      '<div class="card prof reveal">' +
-        '<div class="prof__photo">' + (p.photo ? '<img src="' + esc(p.photo) + '" alt="' + esc(p.name) + '" />' : "👩‍🏫") + "</div>" +
-        '<div class="prof__body">' +
-          '<h3 class="prof__name">' + esc(p.name) + "</h3>" +
-          '<p class="prof__position">' + esc(p.position) + "</p>" +
-          '<p class="prof__bio">' + esc(p.bio) + "</p>" +
-          '<ul class="prof__career">' + each(p.career, function (c) { return "<li>" + esc(c) + "</li>"; }) + "</ul>" +
+      head("INSTRUCTOR", p.title) +
+      '<div class="prof">' +
+        // 왼쪽: 사진 카드 (흑백 사진 위에 큰 인사말)
+        '<div class="prof__photo reveal">' +
+          (p.photo ? '<img src="' + esc(p.photo) + '" alt="' + esc(p.name) + '" />' : '<span class="prof__ph" aria-hidden="true">' + ICON.user + "</span>") +
+          '<div class="prof__overlay">' +
+            '<span class="prof__hello">' + esc(p.hello || "Hello,") + "</span>" +
+            '<strong class="prof__name">' + esc(p.name) + "</strong>" +
+            (p.quote ? '<span class="prof__quote">' + esc(p.quote) + "</span>" : "") +
+          "</div>" +
+        "</div>" +
+        // 오른쪽: 소개 + 연락처
+        '<div class="prof__side">' +
+          '<div class="prof__block reveal">' +
+            '<div class="prof__block-head"><h3>Introduction</h3><span class="chev chev--sm" aria-hidden="true">' + ICON.down + "</span></div>" +
+            '<div class="prof__intro">' +
+              '<p class="prof__position">' + esc(p.position) + "</p>" +
+              '<p class="prof__bio">' + esc(p.bio) + "</p>" +
+              '<ul class="prof__career">' + each(p.career, function (c) { return "<li>" + esc(c) + "</li>"; }) + "</ul>" +
+            "</div>" +
+          "</div>" +
+          '<div class="prof__block reveal">' +
+            '<div class="prof__block-head"><h3>Get In Touch</h3><span class="chev chev--sm" aria-hidden="true">' + ICON.down + "</span></div>" +
+            '<div class="contacts">' + each(p.contacts, function (c) {
+              var inner = '<span class="contact__icon">' + esc(c.icon) + '</span><span class="contact__line"></span>' +
+                '<span class="contact__label">' + esc(c.label) + '</span><span class="contact__value">' + esc(c.value) + "</span>";
+              return c.href ? '<a class="contact" href="' + esc(c.href) + '">' + inner + "</a>" : '<div class="contact">' + inner + "</div>";
+            }) + "</div>" +
+          "</div>" +
         "</div>" +
       "</div>" +
-      '<div class="contacts reveal">' + each(p.contacts, function (c) {
-        var inner = '<span class="contact__icon">' + esc(c.icon) + '</span><span><span class="contact__label">' + esc(c.label) +
-          '</span><span class="contact__value">' + esc(c.value) + "</span></span>";
-        return c.href ? '<a class="contact" href="' + esc(c.href) + '">' + inner + "</a>" : '<div class="contact">' + inner + "</div>";
-      }) + "</div>" +
       '<p class="footer__copy">' + esc(C.footer.copyright) + "</p>" +
     "</div>";
 
@@ -531,27 +571,9 @@
   }
   observe();
 
-  /* ---------- 흩날리는 벚꽃잎 ---------- */
-  if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    var box = document.querySelector(".petals");
-    var count = window.innerWidth < 600 ? 10 : 18;
-    for (var i = 0; i < count; i++) {
-      var pe = document.createElement("span");
-      pe.className = "petal";
-      var size = 8 + Math.random() * 10;
-      pe.style.left = Math.random() * 100 + "%";
-      pe.style.width = size + "px";
-      pe.style.height = size * 0.85 + "px";
-      pe.style.animationDuration = 10 + Math.random() * 12 + "s";
-      pe.style.animationDelay = -Math.random() * 20 + "s";
-      pe.style.opacity = 0.35 + Math.random() * 0.45;
-      box.appendChild(pe);
-    }
-  }
-
   // 참여 기능(interact.js)에서 함께 쓰는 도구들
   window.SITE = {
-    config: C, esc: esc, each: each, head: head, key: key, today: today, parseDate: parseDate,
+    config: C, esc: esc, each: each, head: head, key: key, today: today, parseDate: parseDate, icon: ICON,
     sessions: sessions, sessionByKey: sessionByKey,
     fmtDate: fmtDate, fmtDateTime: fmtDateTime,
     toast: toast, observe: observe, openWeek: openWeek, updateCountdowns: updateCountdowns,

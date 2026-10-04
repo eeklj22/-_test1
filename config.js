@@ -15,6 +15,7 @@ window.SITE_CONFIG = {
     title: "*** | 고려대학교 **학과",           // 브라우저 탭 제목
     description: "고려대학교 **학과 「***」 — AI 기반 데이터 활용능력 배양",
     logoText: "***",                            // 헤더 왼쪽 로고 글자
+    logoMark: "AI",                             // 로고 동그라미 안 글자 (1~2자)
   },
 
   /* ---------- 공지사항 (관리자 화면에서 올리거나 여기서 직접 추가) ---------- */
@@ -46,6 +47,12 @@ window.SITE_CONFIG = {
       { label: "수강 신청", href: "#apply", primary: true },
       { label: "커리큘럼 보기", href: "#curriculum", primary: false },
     ],
+    // 첫 화면 왼쪽 아래 해시태그 목록
+    tags: ["#생성형AI", "#프롬프트", "#데이터분석", "#Python", "#시각화", "#AI윤리"],
+    // 첫 화면 오른쪽 파란 그래픽: 큰 글자 줄(영문 대문자 권장)과 연도
+    art: { lines: ["DATA", "AI"], year: "2026" },
+    // 첫 화면 아래 ‘See More’ 줄
+    seeMore: { label: "See More", href: "#about" },
     // value 를 "auto" 로 두면 커리큘럼 일정(아래 schedule)에서 자동으로 계산됩니다.
     info: [
       { icon: "📅", label: "일정", value: "auto" },
@@ -319,6 +326,8 @@ window.SITE_CONFIG = {
     name: "홍길동 교수",
     position: "고려대학교 **학과 교수",
     photo: "",   // 사진 경로 (예: "images/professor.jpg"). 비워 두면 기본 아이콘이 표시됩니다.
+    hello: "Hello,",                                     // 사진 카드 위 작은 인사말
+    quote: "학생 스스로 질문하고 답을 찾아가는 수업을 만듭니다.",  // 사진 카드 아래 한 줄 소개
     bio: "데이터 활용과 AI 리터러시를 연구하며, 학생들이 스스로 질문하고 답을 찾아가는 수업을 지향합니다.",
     career: ["現 고려대학교 **학과 교수", "저서 『○○○○』 외 4권", "○○ 데이터 정책 자문위원"],
     contacts: [

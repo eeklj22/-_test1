@@ -74,7 +74,7 @@
   function openLogin(prefill) {
     prefill = prefill || {};
     openModal(
-      '<h3 class="modal__title" id="modalTitle">🌸 수강생 로그인</h3>' +
+      '<h3 class="modal__title" id="modalTitle">수강생 로그인</h3>' +
       '<p class="modal__text">학번과 이름을 입력해 주세요.</p>' +
       '<form class="login-form" id="loginForm" novalidate>' +
         '<label class="field"><span class="field__label">학번</span>' +
@@ -106,7 +106,7 @@
       }
       return Store.login(id, name).then(function (u) {
         closeModal();
-        S.toast(u.name + "님, 반가워요! 🌸");
+        S.toast(u.name + "님, 반가워요!");
         if (afterLogin) { var fn = afterLogin; afterLogin = null; setTimeout(fn, 300); }
       });
     });
@@ -122,7 +122,8 @@
   var loginBtn = $("loginBtn");
   function renderHeader() {
     var u = Store.currentUser();
-    loginBtn.textContent = u ? "🌸 " + u.name + "님" : "로그인";
+    loginBtn.innerHTML = S.icon.user + "<span>" + (u ? esc(u.name) + "님" : "로그인") + "</span>";
+    loginBtn.setAttribute("aria-label", u ? u.name + "님 · 수강생 공간으로" : "수강생 로그인");
     loginBtn.classList.toggle("is-in", !!u);
   }
   loginBtn.addEventListener("click", function () {
@@ -186,7 +187,7 @@
         var next = S.sessions.filter(function (s) { return s.date > now; })[0];
         todayHtml = '<div class="today-class is-none"><div><span class="today-class__label">오늘은 수업이 없어요</span>' +
           (next ? "<strong>다음 수업: " + esc(S.fmtDate(next.date)) + " · " + next.n + "주차</strong><span>" + esc(next.w.title) + "</span>"
-                : "<strong>이번 학기 수업이 모두 끝났어요</strong><span>한 학기 동안 수고 많으셨습니다 🌸</span>") +
+                : "<strong>이번 학기 수업이 모두 끝났어요</strong><span>한 학기 동안 수고 많으셨습니다</span>") +
           "</div></div>";
       }
 
@@ -481,7 +482,7 @@
     $("apply").innerHTML =
       '<div class="apply-done">' +
         '<div class="apply-done__icon">🎉</div>' +
-        "<h3>" + esc(updated ? "신청서가 수정되었어요! 🌸" : app.successTitle) + "</h3>" +
+        "<h3>" + esc(updated ? "신청서가 수정되었어요!" : app.successTitle) + "</h3>" +
         "<p>" + esc(app.successText) + "</p>" +
         '<dl class="apply-done__info">' +
           "<div><dt>이름</dt><dd>" + esc(rec.name) + "</dd></div>" +
@@ -554,7 +555,7 @@
       Store.getMyApplication().then(function (rec) {
         if (!rec) return;
         Store.login(rec.studentId, rec.name).then(function () {
-          S.toast(rec.name + "님, 반가워요! 🌸");
+          S.toast(rec.name + "님, 반가워요!");
           renderApplyDone(rec, false);
           $("student").scrollIntoView({ behavior: "smooth", block: "start" });
         });
@@ -588,7 +589,7 @@
    *  첫 방문 폭죽 (캔버스)
    * ================================================================ */
   var canvas = $("confetti"), ctx = canvas.getContext("2d"), parts = [], running = false;
-  var COLORS = ["#f7a8c7", "#e86a9c", "#a98be8", "#7b5cc4", "#fccde0", "#ffffff", "#ffd36e"];
+  var COLORS = ["#2245ff", "#2245ff", "#151515", "#151515", "#ffffff", "#9aa8ff", "#cfcfcb"];
 
   function fireConfetti() {
     if (reduceMotion || !ctx) return;
@@ -643,7 +644,7 @@
   function showPopup() {
     if (!modal.hidden) return; // 다른 창이 열려 있으면 띄우지 않음
     openModal(
-      '<div class="promo__art">🌸</div>' +
+      '<div class="promo__art" aria-hidden="true">' + esc((C.hero.art && C.hero.art.year) || "2026") + "</div>" +
       '<span class="modal__badge">' + esc(pop.badge) + "</span>" +
       '<h3 class="modal__title" id="modalTitle">' + esc(pop.title) + "</h3>" +
       '<p class="modal__text promo__body">' + esc(pop.body) + "</p>" +
