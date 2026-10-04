@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>강의 소개</title>
+  <meta name="description" content="" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <!-- 배경에 흩날리는 벚꽃잎 -->
+  <div class="petals" aria-hidden="true"></div>
+
+  <header class="header" id="header">
+    <div class="header__inner">
+      <a href="#top" class="logo" data-scroll="top">
+        <span class="logo__mark">🌸</span>
+        <span class="logo__text" id="logoText"></span>
+      </a>
+      <button class="menu-toggle" id="menuToggle" aria-label="메뉴 열기" aria-expanded="false" aria-controls="nav">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="nav" id="nav" aria-label="주요 메뉴"></nav>
+      <button class="login-pill" id="loginBtn" type="button">로그인</button>
+      <button class="lock-btn" id="adminBtn" type="button" aria-label="관리자 모드" title="관리자 모드">🔒</button>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero" id="hero"></section>
+    <section class="section section--tight" id="notice"></section>
+    <section class="section" id="about"></section>
+    <section class="section" id="curriculum"></section>
+    <section class="section" id="student"></section>
+    <section class="section" id="join"></section>
+    <section class="section" id="enroll"></section>
+    <section class="section" id="faq"></section>
+  </main>
+
+  <!-- 교수자 소개 + 연락처가 담긴 푸터 -->
+  <footer class="footer" id="instructor"></footer>
+
+  <!-- 알림 메시지 -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <!-- 팝업(모달) · 폭죽 -->
+  <div class="modal" id="modal" hidden>
+    <div class="modal__backdrop" data-close></div>
+    <div class="modal__box" role="dialog" aria-modal="true" aria-labelledby="modalTitle" tabindex="-1">
+      <button class="modal__x" data-close aria-label="닫기">×</button>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+  <canvas class="confetti" id="confetti" aria-hidden="true"></canvas>
+
+  <!-- 관리자 화면 -->
+  <div class="admin" id="admin" role="dialog" aria-modal="true" aria-label="관리자 화면" hidden></div>
+
+  <button class="to-top" id="toTop" aria-label="맨 위로 이동">↑</button>
+
+  <!-- 설정 파일을 먼저 불러오고, 그 다음 렌더링 스크립트를 실행합니다 -->
+  <script src="config.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/interact.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
